@@ -91,10 +91,30 @@ model.add(Dropout(0.5))
 model.add(Dense(1)) 
 model.add(Activation('sigmoid')) 
 
+model.compile(loss ='binary_crossentropy', 
+                     optimizer ='rmsprop', 
+                   metrics =['accuracy']) 
+train_datagen = ImageDataGenerator( 
+                rescale = 1. / 255, 
+                 shear_range = 0.2, 
+                  zoom_range = 0.2, 
+            horizontal_flip = True) 
+test_datagen = ImageDataGenerator(rescale = 1. / 255) 
+  
+train_batches = ImageDataGenerator().flow_from_directory(train_path, 
+                              target_size =(224, 224), 
+                     batch_size = 10, class_mode ='binary') 
+valid_batches = ImageDataGenerator().flow_from_directory(train_path, 
+                              target_size =(224, 224), 
+                     batch_size = 5, class_mode ='binary') 
+test_batches = ImageDataGenerator().flow_from_directory(train_path, 
+                              target_size =(224, 224), 
+                     batch_size = 10, class_mode ='binary') 
+model.fit_generator(train_batches, 
+    steps_per_epoch = 4, 
+    epochs = 10, validation_data = valid_batches, 
+    validation_steps = 4, verbose=2) 
 model.save_weights('model_saved.h5')
-
-
-# In[ ]:
 
 
 
